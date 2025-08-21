@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type game</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="board">
+      <canvas id="gameCanvas" width="880px" height="300px"></canvas>
+      <div class="controls">
+        <input id="textInput" type="text" placeholder="Wpisz aktualne słowo i naciśnij Enter">
+      </div>
+      <div class="stats">
+        <div class="res">Typed words: <span id="score">0</span></div>
+      </div>
+      <div class="modes">
+        <h2>Games modes</h2>
+        <div class="buttons">
+          <button id="">Random</button>
+          <button id="">Moving</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="./js/game.js"></script>
+</body>
+
+</html>
