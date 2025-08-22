@@ -1,3 +1,8 @@
+const mode = document.querySelector(".mode");
+const randomBtn = document.querySelector("#randomMode");
+const rushBtn = document.querySelector("#rushBtn");
+const startBtn = document.querySelector(".startGame");
+
 const canvas = document.getElementById("gameCanvas");
 const input = document.getElementById("textInput");
 const restartBtn = document.getElementById("restartBtn");
@@ -8,14 +13,14 @@ import { words } from "./words.js";
 
 let gameOver = false;
 
-const wordsOnDisplay = [];
+let wordInterval = null;
 
-const wordInterval = setInterval(getRandomWord, 1000);
+const wordsOnDisplay = [];
 
 function getRandomWord() {
 	if (gameOver) return;
 
-	if (wordsOnDisplay.length >= 15) {
+	if (wordsOnDisplay.length >= 4) {
 		endGame();
 		return;
 	}
@@ -54,13 +59,6 @@ function checkWord(typedWord) {
 	input.value = "";
 }
 
-input.addEventListener("keyup", (e) => {
-	if (e.key == "Enter") {
-		const typedWord = input.value.toLowerCase().trim();
-		checkWord(typedWord);
-	}
-});
-
 function endGame() {
 	gameOver = true;
 	clearInterval(wordInterval);
@@ -69,3 +67,44 @@ function endGame() {
 	ctx.fillText("Koniec gry", 300, 160);
 	input.value = "";
 }
+
+function countdown() {
+	let counter = 4;
+	ctx.font = "60px Arial";
+	ctx.fillStyle = "white";
+
+	const interval = setInterval(() => {
+		counter--;
+		if (counter > 0) {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.fillText(counter, 420, 160);
+		} else {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			clearInterval(interval);
+			ctx.fillText("Start!", 370, 160);
+			startGame();
+		}
+	}, 1000);
+}
+
+function startGame() {
+	wordsOnDisplay.length = 0;
+	wordInterval = setInterval(getRandomWord, 2000);
+}
+
+input.addEventListener("keyup", (e) => {
+	if (e.key == "Enter") {
+		const typedWord = input.value.toLowerCase().trim();
+		checkWord(typedWord);
+	}
+});
+
+randomBtn.addEventListener("click", () => {
+	mode.textContent = "Chaos Mode";
+});
+
+rushBtn.addEventListener("click", () => {
+	mode.textContent = "Rush Mode";
+});
+
+startBtn.addEventListener("click", countdown);

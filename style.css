@@ -92,3 +92,14 @@ button {
 	width: 200px;
 	padding: 15px 20px;
 }
+
+.mode {
+	text-align: center;
+}
+
+.startGame {
+	font-size: 1.1rem;
+	padding: 15px 25px;
+	display: block;
+	margin: 0 auto 20px auto;
+}
