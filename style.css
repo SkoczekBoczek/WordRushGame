@@ -62,6 +62,7 @@ button {
 	background: var(--accent);
 	color: #03202b;
 	font-weight: 600;
+	font-size: 1.1rem;
 	cursor: pointer;
 }
 
@@ -85,7 +86,7 @@ button {
 	align-items: center;
 	justify-content: center;
 	gap: 20px;
-	width: 100%;
+	width: 40%;
 }
 
 .modes button {
@@ -98,7 +99,6 @@ button {
 }
 
 .startGame {
-	font-size: 1.1rem;
 	padding: 15px 25px;
 	display: block;
 	margin: 0 auto 20px auto;

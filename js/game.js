@@ -12,7 +12,7 @@ const ctx = canvas.getContext("2d");
 import { words } from "./words.js";
 
 let gameOver = false;
-
+let currentMode = "chaos";
 let wordInterval = null;
 
 const wordsOnDisplay = [];
@@ -20,7 +20,7 @@ const wordsOnDisplay = [];
 function getRandomWord() {
 	if (gameOver) return;
 
-	if (wordsOnDisplay.length >= 4) {
+	if (currentMode === "chaos" && wordsOnDisplay.length >= 4) {
 		endGame();
 		return;
 	}
@@ -30,19 +30,38 @@ function getRandomWord() {
 	const textWidth = ctx.measureText(newWord).width;
 	const textHeight = 30;
 
-	const x = Math.random() * (canvas.width - textWidth);
 	const y = Math.random() * (canvas.height - textHeight) + textHeight;
 
-	wordsOnDisplay.push({ text: newWord, x, y });
-	displayWords();
+	if (currentMode == "chaos") {
+		const x = Math.random() * (canvas.width - textWidth);
+		wordsOnDisplay.push({ text: newWord, x, y });
+	} else if (currentMode == "rush") {
+		const x = 0;
+		const speed = 2;
+		wordsOnDisplay.push({ text: newWord, x, y, speed });
+	}
 }
 
 function displayWords() {
+	if (gameOver) return;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 	ctx.font = "30px Arial";
 	ctx.fillStyle = "white";
 	for (const word of wordsOnDisplay) {
 		ctx.fillText(word.text, word.x, word.y);
+
+		if (currentMode == "rush") {
+			word.x += word.speed;
+
+			if (word.x >= canvas.width) {
+				endGame();
+				return;
+			}
+		}
+	}
+	if (!gameOver) {
+		requestAnimationFrame(displayWords);
 	}
 }
 
@@ -55,8 +74,19 @@ function checkWord(typedWord) {
 	if (index !== -1) {
 		wordsOnDisplay.splice(index, 1);
 	}
-	displayWords();
 	input.value = "";
+}
+
+function startGame() {
+	wordsOnDisplay.length = 0;
+	gameOver = false;
+	requestAnimationFrame(displayWords);
+
+	if (currentMode == "chaos") {
+		wordInterval = setInterval(getRandomWord, 2000);
+	} else if (currentMode == "rush") {
+		wordInterval = setInterval(getRandomWord, 2000);
+	}
 }
 
 function endGame() {
@@ -87,11 +117,6 @@ function countdown() {
 	}, 1000);
 }
 
-function startGame() {
-	wordsOnDisplay.length = 0;
-	wordInterval = setInterval(getRandomWord, 2000);
-}
-
 input.addEventListener("keyup", (e) => {
 	if (e.key == "Enter") {
 		const typedWord = input.value.toLowerCase().trim();
@@ -100,10 +125,14 @@ input.addEventListener("keyup", (e) => {
 });
 
 randomBtn.addEventListener("click", () => {
+	if (!gameOver) return;
+	currentMode = "chaos";
 	mode.textContent = "Chaos Mode";
 });
 
 rushBtn.addEventListener("click", () => {
+	if (!gameOver) return;
+	currentMode = "rush";
 	mode.textContent = "Rush Mode";
 });
 
